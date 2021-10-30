@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Z))
         {
-            Debug.Log("Forward");
             rb.AddRelativeForce(Vector3.forward * movementSpeed * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.S))
