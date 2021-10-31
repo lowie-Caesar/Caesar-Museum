@@ -8,7 +8,7 @@ public class SignHighlighter : MonoBehaviour
     RaycastHit hit;
     int layerMask = 1 << 8;
     GameObject hitObject;
-    bool lastCastWasHit = false;
+    bool lastCastWasHit, signIsShown = false;
     [SerializeField] GameObject cameraObject;
     [SerializeField] float detectionRange = 2f;
     
@@ -26,13 +26,26 @@ public class SignHighlighter : MonoBehaviour
         {
             Debug.DrawRay(headTransform.position, headTransform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             hitObject = hit.collider.gameObject;
-            hitObject.GetComponent<SignGlowController>().ActivateSignGlow();
+            hitObject.GetComponent<SignController>().ActivateSignGlow();
             lastCastWasHit = true;
         }
         else
         {
             Debug.DrawRay(headTransform.position, headTransform.TransformDirection(Vector3.forward) * detectionRange, Color.white);
-            if (lastCastWasHit) { hitObject.GetComponent<SignGlowController>().DeActivateSignGlow(); }
+            if (lastCastWasHit) { hitObject.GetComponent<SignController>().DeActivateSignGlow(); }
+        }
+        if (!lastCastWasHit) { return; }
+
+        if (Input.GetKeyDown(KeyCode.Return) && !signIsShown)
+        {
+            hitObject.GetComponent<SignController>().ShowSignText();
+            signIsShown = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && signIsShown)
+        {
+            hitObject.GetComponent<SignController>().HideSignText();
+            signIsShown = false;
         }
     }
 }
