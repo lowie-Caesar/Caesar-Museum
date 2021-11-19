@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     Rigidbody rb;
     float mouseX, mouseY, xRotation = 0;
+    public bool isMovementDisabled = false;
+
     [SerializeField] float xRotationMinClamp = -70f;
     [SerializeField] float xRotationMaxClamp = 70f;
     [SerializeField] GameObject playerObject;
@@ -25,6 +27,14 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("Application Quit");
+            Application.Quit();
+        }
+        
+        if(isMovementDisabled) { return; }
+        
         MovePlayer();
         RotatePlayer();
     }

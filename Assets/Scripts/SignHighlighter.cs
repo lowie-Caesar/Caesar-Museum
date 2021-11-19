@@ -8,8 +8,9 @@ public class SignHighlighter : MonoBehaviour
     RaycastHit hit;
     int layerMask = 1 << 8;
     GameObject hitObject;
-    bool lastCastWasHit, signIsShown = false;
+    bool lastCastWasHit, signIsShown = true;
     [SerializeField] GameObject cameraObject;
+    [SerializeField] GameObject canvas;
     [SerializeField] float detectionRange = 2f;
     
     // Start is called before the first frame update
@@ -33,10 +34,19 @@ public class SignHighlighter : MonoBehaviour
         {
             Debug.DrawRay(headTransform.position, headTransform.TransformDirection(Vector3.forward) * detectionRange, Color.white);
             if (lastCastWasHit) { hitObject.GetComponent<SignController>().DeActivateSignGlow(); }
+
+            lastCastWasHit = false;
+
+            if (signIsShown && Input.GetKeyDown(KeyCode.Escape))
+            {
+                canvas.SetActive(false);
+                GetComponent<PlayerMovement>().isMovementDisabled = false;
+                signIsShown = false;
+            }
         }
         if (!lastCastWasHit) { return; }
 
-        if (Input.GetKeyDown(KeyCode.Return) && !signIsShown)
+        if (Input.GetAxis("Fire1") > 0.5 && !signIsShown)
         {
             hitObject.GetComponent<SignController>().ShowSignText();
             signIsShown = true;
